@@ -1,0 +1,41 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function addESP(player)
+	if player == LocalPlayer then return end
+
+	local function characterAdded(character)
+		local highlight = Instance.new("Highlight")
+		highlight.Name = "PlayerHighlight"
+		highlight.FillTransparency = 0.5
+		highlight.OutlineTransparency = 0
+		highlight.Parent = character
+
+		local billboard = Instance.new("BillboardGui")
+		billboard.Name = "PlayerName"
+		billboard.Size = UDim2.new(0, 200, 0, 50)
+		billboard.StudsOffset = Vector3.new(0, 3, 0)
+		billboard.AlwaysOnTop = true
+		billboard.Parent = character.Head
+
+		local text = Instance.new("TextLabel")
+		text.Size = UDim2.new(1,0,1,0)
+		text.BackgroundTransparency = 1
+		text.Text = player.Name
+		text.TextColor3 = Color3.new(1,1,1)
+		text.TextScaled = true
+		text.Parent = billboard
+	end
+
+	player.CharacterAdded:Connect(characterAdded)
+
+	if player.Character then
+		characterAdded(player.Character)
+	end
+end
+
+for _,player in pairs(Players:GetPlayers()) do
+	addESP(player)
+end
+
+Players.PlayerAdded:Connect(addESP)
